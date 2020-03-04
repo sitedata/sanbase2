@@ -33,7 +33,7 @@ defmodule SanbaseWeb.Graphql.Schema do
   import_types(Graphql.UserTypes)
   import_types(Graphql.TransactionTypes)
   import_types(Graphql.FileTypes)
-  import_types(Graphql.UserListTypes)
+  import_types(Graphql.WatchlistTypes)
   import_types(Graphql.MarketSegmentTypes)
   import_types(Graphql.UserSettingsTypes)
   import_types(Graphql.UserTriggerTypes)
@@ -107,7 +107,7 @@ defmodule SanbaseWeb.Graphql.Schema do
     import_fields(:anomaly_queries)
     import_fields(:metric_queries)
     import_fields(:social_data_queries)
-    import_fields(:user_list_queries)
+    import_fields(:watchlist_queries)
     import_fields(:project_queries)
     import_fields(:project_eth_spent_queries)
     import_fields(:insight_queries)
@@ -126,7 +126,7 @@ defmodule SanbaseWeb.Graphql.Schema do
   end
 
   mutation do
-    import_fields(:user_list_mutations)
+    import_fields(:watchlist_mutations)
     import_fields(:insight_mutations)
     import_fields(:signal_mutations)
     import_fields(:user_mutations)

@@ -7,100 +7,52 @@ defmodule SanbaseWeb.Graphql.Schema.WatchlistQueries do
   """
   use Absinthe.Schema.Notation
 
-  alias SanbaseWeb.Graphql.Resolvers.UserListResolver
+  alias SanbaseWeb.Graphql.Resolvers.WatchlistResolver
 
   alias SanbaseWeb.Graphql.Middlewares.JWTAuth
 
-  object :user_list_queries do
-    @desc "Fetch all favourites lists for current_user."
-    field :fetch_user_lists, list_of(:user_list) do
-      meta(access: :free)
-
-      deprecate("Use `fetchWatchlists` instead")
-      resolve(&UserListResolver.fetch_user_lists/3)
-    end
-
+  object :watchlist_queries do
     @desc "Fetch all watchlists for the current user"
     field :fetch_watchlists, list_of(:user_list) do
       meta(access: :free)
 
-      resolve(&UserListResolver.fetch_user_lists/3)
-    end
-
-    @desc "Fetch all public favourites lists for current_user."
-    field :fetch_public_user_lists, list_of(:user_list) do
-      meta(access: :free)
-
-      deprecate("Use `fetchPublicWatchlists` instead")
-      resolve(&UserListResolver.fetch_public_user_lists/3)
+      resolve(&WatchlistResolver.fetch_user_lists/3)
     end
 
     @desc "Fetch all public watchlists for current_user."
     field :fetch_public_watchlists, list_of(:user_list) do
       meta(access: :free)
 
-      resolve(&UserListResolver.fetch_public_user_lists/3)
-    end
-
-    @desc "Fetch all public favourites lists"
-    field :fetch_all_public_user_lists, list_of(:user_list) do
-      meta(access: :free)
-
-      deprecate("Use `fetchAllPublicWatchlists` instead")
-      resolve(&UserListResolver.fetch_all_public_user_lists/3)
+      resolve(&WatchlistResolver.fetch_public_user_lists/3)
     end
 
     @desc "Fetch all public watchlists"
     field :fetch_all_public_watchlists, list_of(:user_list) do
       meta(access: :free)
 
-      resolve(&UserListResolver.fetch_all_public_user_lists/3)
+      resolve(&WatchlistResolver.fetch_all_public_user_lists/3)
     end
 
     @desc ~s"""
-    Fetch public favourites list by list id.
-    If the list is owned by the current user then the list can be private as well.
-    This query returns either a single user list item or null.
+    Return a watchlist. All public watchlists are accessible to anyone. Private
+    watchlists are accessible only by their owner.
     """
-    field :user_list, :user_list do
-      meta(access: :free)
-
-      deprecate("Use `watchlist` with argument `id` instead")
-      arg(:user_list_id, non_null(:id))
-
-      resolve(&UserListResolver.user_list/3)
-    end
-
     field :watchlist, :user_list do
       meta(access: :free)
 
       arg(:id, non_null(:id))
-      resolve(&UserListResolver.watchlist/3)
+      resolve(&WatchlistResolver.watchlist/3)
     end
 
     field :watchlist_by_slug, :user_list do
       meta(access: :free)
 
       arg(:slug, non_null(:string))
-      resolve(&UserListResolver.watchlist_by_slug/3)
+      resolve(&WatchlistResolver.watchlist_by_slug/3)
     end
   end
 
-  object :user_list_mutations do
-    @desc """
-    Create user favourites list.
-    """
-    field :create_user_list, :user_list do
-      deprecate("Use `createWatchlist` instead")
-      arg(:name, non_null(:string))
-      arg(:is_public, :boolean)
-      arg(:color, :color_enum)
-      arg(:function, :json)
-
-      middleware(JWTAuth)
-      resolve(&UserListResolver.create_user_list/3)
-    end
-
+  object :watchlist_mutations do
     @desc """
     Create a watchlist.
     """
@@ -111,7 +63,7 @@ defmodule SanbaseWeb.Graphql.Schema.WatchlistQueries do
       arg(:function, :json)
 
       middleware(JWTAuth)
-      resolve(&UserListResolver.create_user_list/3)
+      resolve(&WatchlistResolver.create_user_list/3)
     end
 
     @desc """
@@ -128,7 +80,7 @@ defmodule SanbaseWeb.Graphql.Schema.WatchlistQueries do
       arg(:is_monitored, :boolean)
 
       middleware(JWTAuth)
-      resolve(&UserListResolver.update_user_list/3)
+      resolve(&WatchlistResolver.update_user_list/3)
     end
 
     @desc """
@@ -144,7 +96,7 @@ defmodule SanbaseWeb.Graphql.Schema.WatchlistQueries do
       arg(:is_monitored, :boolean)
 
       middleware(JWTAuth)
-      resolve(&UserListResolver.update_user_list/3)
+      resolve(&WatchlistResolver.update_user_list/3)
     end
 
     field :update_watchlist_settings, :watchlist_settings do
@@ -152,7 +104,7 @@ defmodule SanbaseWeb.Graphql.Schema.WatchlistQueries do
       arg(:settings, non_null(:watchlist_settings_input_object))
 
       middleware(JWTAuth)
-      resolve(&UserListResolver.update_watchlist_settings/3)
+      resolve(&WatchlistResolver.update_watchlist_settings/3)
     end
 
     @desc "Remove user favourites list."
@@ -160,7 +112,7 @@ defmodule SanbaseWeb.Graphql.Schema.WatchlistQueries do
       arg(:id, non_null(:integer))
 
       middleware(JWTAuth)
-      resolve(&UserListResolver.remove_user_list/3)
+      resolve(&WatchlistResolver.remove_user_list/3)
     end
 
     @desc "Remove a watchlist."
@@ -168,7 +120,7 @@ defmodule SanbaseWeb.Graphql.Schema.WatchlistQueries do
       arg(:id, non_null(:integer))
 
       middleware(JWTAuth)
-      resolve(&UserListResolver.remove_user_list/3)
+      resolve(&WatchlistResolver.remove_user_list/3)
     end
   end
 end
